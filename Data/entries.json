@@ -1,0 +1,60 @@
+﻿[
+    {
+        "Id":  "e345a5c4-38a8-45fb-9e18-dfe7253b7d47",
+        "Date":  "2026-08-12",
+        "DayNumber":  1,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "t1",
+                             "start":  "23:42",
+                             "end":  "23:44",
+                             "duration":  2
+                         }
+                     ]
+    },
+    {
+        "Id":  "930edad7-0f30-4b8f-9ff5-cec838df4457",
+        "Date":  "2026-08-13",
+        "DayNumber":  2,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "",
+                             "start":  "18:53",
+                             "end":  "19:53",
+                             "duration":  60
+                         }
+                     ]
+    }
+]
