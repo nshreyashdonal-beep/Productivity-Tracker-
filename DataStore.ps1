@@ -673,3 +673,67 @@ function global:Renumber-Entries {
     }
     return , $sorted
 }
+
+function global:Backfill-SkippedDays {
+    <#
+        Fills in empty "missed" entries for any calendar day strictly between
+        the last known day and today that has no entry of its own - e.g. the
+        user last opened the app on Aug 20, opens it again on Aug 23: Aug 21
+        and Aug 22 get created here as ordinary entries (all goals default
+        "missed", no sessions), the same shape New-Entry always produces.
+
+        Today is intentionally NOT created here - it still only appears via
+        ADD DAY or by starting a Focus session, exactly as before. This
+        function only ever looks backward from today, never creates it.
+
+        The anchor day is the latest entry dated today or earlier - entries
+        dated in the future (pre-built ahead of time so goal days exist,
+        see Show-Report) are ignored when finding it, so a pre-built future
+        day can never mask a real gap sitting behind it. If there are no
+        past-or-today entries yet, the anchor is the day before the
+        journey's StartDate, so backfill (if needed) starts at Day 1.
+
+        Returns the updated, renumbered entries array. No-ops (returns
+        Entries unchanged) when there's no StartDate yet or nothing to fill.
+    #>
+    param(
+        [Parameter(Mandatory)][AllowEmptyCollection()][array]$Entries,
+        [Parameter(Mandatory)]$Settings
+    )
+
+    if (-not $Settings.StartDate) { return , $Entries }
+
+    $todayDate = (Get-Date).Date
+    $startDate = [datetime]::ParseExact($Settings.StartDate, "yyyy-MM-dd", $null).Date
+
+    $pastOrToday = @($Entries | Where-Object {
+        [datetime]::ParseExact($_.Date, "yyyy-MM-dd", $null).Date -le $todayDate
+    })
+    $anchorDate = if ($pastOrToday.Count -gt 0) {
+        ($pastOrToday |
+            ForEach-Object { [datetime]::ParseExact($_.Date, "yyyy-MM-dd", $null).Date } |
+            Sort-Object -Descending | Select-Object -First 1)
+    } else {
+        $startDate.AddDays(-1)
+    }
+
+    $missingDates = @()
+    $cursor = $anchorDate.AddDays(1)
+    while ($cursor -lt $todayDate) {
+        $missingDates += $cursor.ToString("yyyy-MM-dd")
+        $cursor = $cursor.AddDays(1)
+    }
+    if ($missingDates.Count -eq 0) { return , $Entries }
+
+    $goals = @($Settings.GoalHours | Where-Object { $null -ne $_ })
+    $updated = @($Entries)
+    foreach ($dateStr in $missingDates) {
+        # Defensive: skip if a day for this date somehow already exists.
+        if (@($updated | Where-Object { $_.Date -eq $dateStr })) { continue }
+        $newEntry = New-Entry -Date $dateStr -GoalHours $goals -ExistingEntries $updated
+        $updated = @($updated) + $newEntry
+    }
+
+    $updated = Renumber-Entries -Entries $updated
+    return , $updated
+}

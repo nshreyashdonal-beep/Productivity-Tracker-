@@ -161,6 +161,13 @@ $FocusLogTargetText   = $window.FindName("FocusLogTargetText")
 $global:Entries          = Import-Entries
 $global:Settings         = Import-Settings
 
+# Fill in empty rows for any day skipped between the last time the app was
+# opened and today (e.g. last opened Aug 20, opens again Aug 23 - Aug 21 and
+# Aug 22 get created here as ordinary missed-goal days). Today itself is
+# never created by this - only ADD DAY or starting a Focus session does that.
+$global:Entries = Backfill-SkippedDays -Entries $global:Entries -Settings $global:Settings
+Save-Entries -Entries $global:Entries
+
 # ---------- Backup folder ----------
 # Defaults to the app's own Backup\ folder, but the user can point it anywhere
 # via SET BACKUP FOLDER; that choice is persisted in settings.json so a reinstall
@@ -821,19 +828,30 @@ function global:New-DayRow {
     $stack = [System.Windows.Controls.StackPanel]::new()
 
     # ---- Header row (click anywhere to expand/collapse) ----
+    # Two rows: row 0 is the compact summary line (date, done-count, total,
+    # delete/select) right-anchored via a flexible spacer column; row 1 is the
+    # goal chips, given the FULL row width on their own line. Previously chips
+    # shared row 0 inside a "*" column squeezed between fixed columns, which at
+    # normal window widths wrapped each chip to its own line and left a large
+    # dead gap before the count/total text (the "no proper gaps" look).
     $headerGrid = [System.Windows.Controls.Grid]::new()
     $headerGrid.Margin = "14,10,14,10"
     # Widths set directly (faster than New-Object -Property in a hot per-row loop)
     $cdDate = [System.Windows.Controls.ColumnDefinition]::new(); $cdDate.Width = "100"
-    $cdChips = [System.Windows.Controls.ColumnDefinition]::new(); $cdChips.Width = "*"
+    $cdSpacer = [System.Windows.Controls.ColumnDefinition]::new(); $cdSpacer.Width = "*"
     $cdCount = [System.Windows.Controls.ColumnDefinition]::new(); $cdCount.Width = "Auto"
     $cdTotal = [System.Windows.Controls.ColumnDefinition]::new(); $cdTotal.Width = "Auto"
     $cdDel = [System.Windows.Controls.ColumnDefinition]::new(); $cdDel.Width = "Auto"
     [void]$headerGrid.ColumnDefinitions.Add($cdDate)
-    [void]$headerGrid.ColumnDefinitions.Add($cdChips)
+    [void]$headerGrid.ColumnDefinitions.Add($cdSpacer)
     [void]$headerGrid.ColumnDefinitions.Add($cdCount)
     [void]$headerGrid.ColumnDefinitions.Add($cdTotal)
     [void]$headerGrid.ColumnDefinitions.Add($cdDel)
+
+    $rdSummary = [System.Windows.Controls.RowDefinition]::new(); $rdSummary.Height = "Auto"
+    $rdChips = [System.Windows.Controls.RowDefinition]::new(); $rdChips.Height = "Auto"
+    [void]$headerGrid.RowDefinitions.Add($rdSummary)
+    [void]$headerGrid.RowDefinitions.Add($rdChips)
 
     # Date column
     $dateStack = [System.Windows.Controls.StackPanel]::new()
@@ -853,16 +871,19 @@ function global:New-DayRow {
     [void]$dateStack.Children.Add($dateText)
     [void]$dateStack.Children.Add($dayText)
     [System.Windows.Controls.Grid]::SetColumn($dateStack, 0)
+    [System.Windows.Controls.Grid]::SetRow($dateStack, 0)
     [void]$headerGrid.Children.Add($dateStack)
 
-    # Chips panel
+    # Chips panel - own full-width row beneath the summary line, so it always
+    # has room to lay chips out horizontally instead of wrapping one-per-line.
     $chipsPanel = [System.Windows.Controls.WrapPanel]::new()
-    $chipsPanel.VerticalAlignment = "Center"
-    $chipsPanel.Margin = "8,0,14,0"
+    $chipsPanel.Margin = "0,10,0,0"
     foreach ($goal in $Entry.Goals) {
         [void]$chipsPanel.Children.Add((New-GoalChip -Goal $goal -EntryId $Entry.Id))
     }
-    [System.Windows.Controls.Grid]::SetColumn($chipsPanel, 1)
+    [System.Windows.Controls.Grid]::SetRow($chipsPanel, 1)
+    [System.Windows.Controls.Grid]::SetColumn($chipsPanel, 0)
+    [System.Windows.Controls.Grid]::SetColumnSpan($chipsPanel, 5)
     [void]$headerGrid.Children.Add($chipsPanel)
 
     # Goal fraction (col 2)
@@ -876,6 +897,7 @@ function global:New-DayRow {
     $countText.HorizontalAlignment = "Right"
     $countText.VerticalAlignment = "Center"
     [System.Windows.Controls.Grid]::SetColumn($countText, 2)
+    [System.Windows.Controls.Grid]::SetRow($countText, 0)
     [void]$headerGrid.Children.Add($countText)
     Register-Count -EntryId $Entry.Id -TextBlock $countText
 
@@ -894,6 +916,7 @@ function global:New-DayRow {
     $totalText.VerticalAlignment = "Center"
     $global:TotalRegistry[$Entry.Id] = $totalText
     [System.Windows.Controls.Grid]::SetColumn($totalText, 3)
+    [System.Windows.Controls.Grid]::SetRow($totalText, 0)
     [void]$headerGrid.Children.Add($totalText)
 
     # Delete button / Select-mode checkbox — only for today-and-future dates.
@@ -925,6 +948,7 @@ function global:New-DayRow {
         Update-BulkDeleteBanner
     }.GetNewClosure())
     [System.Windows.Controls.Grid]::SetColumn($selCheckBox, 4)
+    [System.Windows.Controls.Grid]::SetRow($selCheckBox, 0)
     [void]$headerGrid.Children.Add($selCheckBox)
 
     # ---- Single-row delete button (col 4) ----
@@ -984,6 +1008,7 @@ function global:New-DayRow {
         Update-FilterView
     }.GetNewClosure())
     [System.Windows.Controls.Grid]::SetColumn($deleteBtn, 4)
+    [System.Windows.Controls.Grid]::SetRow($deleteBtn, 0)
     [void]$headerGrid.Children.Add($deleteBtn)
 
     $headerGrid.Add_MouseLeftButtonUp({
@@ -1437,10 +1462,14 @@ function global:Add-PendingGoalFromInput {
 }
 
 function global:Get-ComputedDate {
-    # Day 1 = journey start date; each day after adds one calendar day
-    $startDate = [datetime]::ParseExact($global:Settings.StartDate, "yyyy-MM-dd", $null)
-    $dayNumber = ($global:Entries | Measure-Object).Count + 1
-    return $startDate.AddDays($dayNumber - 1)
+    # Was: StartDate + EntryCount days. That assumed one entry gets added
+    # per real calendar day with zero gaps, so any skipped day (app not
+    # opened) silently shifted every day added afterward earlier than its
+    # real date, forever. Real "today" everywhere - matches Focus Mode,
+    # Show-Report, and Backfill-SkippedDays, which all already used the
+    # real clock. Kept as a thin wrapper (no remaining internal callers)
+    # in case anything external still expects this name.
+    return (Get-Date).Date
 }
 
 function global:Update-SyncStatus {
@@ -2778,6 +2807,7 @@ function global:Start-FocusSession {
     # If today's day entry doesn't exist yet, auto-create it (with the journey's
     # goal template) so a session always has a day to log to - no + ADD DAY needed.
     if ($null -eq (Get-FocusTargetEntry) -and @($global:Settings.GoalHours).Count -gt 0) {
+        $global:Entries = Backfill-SkippedDays -Entries $global:Entries -Settings $global:Settings
         $todayStr = (Get-Date).ToString("yyyy-MM-dd")
         $newEntry = New-Entry -Date $todayStr -GoalHours $global:Settings.GoalHours -ExistingEntries $global:Entries
         $global:Entries = @($global:Entries) + $newEntry
@@ -3024,6 +3054,7 @@ function global:Write-FocusSessionRecord {
     # dataset yet (e.g. the journey hasn't been advanced to today).
     $target = Get-FocusTargetEntry
     if (-not $target) {
+        $global:Entries = Backfill-SkippedDays -Entries $global:Entries -Settings $global:Settings
         $todayStr = (Get-Date).ToString("yyyy-MM-dd")
         $goals = @($global:Settings.GoalHours | Where-Object { $null -ne $_ })
         $target = New-Entry -Date $todayStr -GoalHours $goals -ExistingEntries $global:Entries
@@ -4020,16 +4051,34 @@ function global:Get-ProductiveHoursForDay {
 }
 
 function global:Get-StreakInfo {
-    # Given a per-entry "completed" list (date order), returns the longest run of
-    # consecutive true values and the indices of that run.
-    param([bool[]]$Completed)
+    <#
+        Given a per-entry "completed" list and its matching Dates (both in
+        date order), returns the longest run of consecutive true values and
+        the indices of that run. Dates is optional for backward
+        compatibility, but when supplied a run also breaks whenever two
+        consecutive completed entries aren't exactly one calendar day apart -
+        so a real gap (e.g. a day entry that got deleted) can't silently
+        stitch two streaks together by array position alone. Backfill-
+        SkippedDays normally prevents gaps from existing at all; this is a
+        second, independent safety net.
+    #>
+    param(
+        [bool[]]$Completed,
+        [string[]]$Dates = $null
+    )
     $longest = 0
     $longestStart = -1
     $longestEnd = -1
     $runStart = -1
     for ($i = 0; $i -lt $Completed.Count; $i++) {
         if ($Completed[$i]) {
-            if ($runStart -lt 0) { $runStart = $i }
+            $brokeByGap = $false
+            if ($runStart -ge 0 -and $Dates -and $Dates.Count -eq $Completed.Count) {
+                $prevDate = [datetime]::ParseExact($Dates[$i - 1], "yyyy-MM-dd", $null)
+                $curDate  = [datetime]::ParseExact($Dates[$i],     "yyyy-MM-dd", $null)
+                if (($curDate - $prevDate).Days -ne 1) { $brokeByGap = $true }
+            }
+            if ($runStart -lt 0 -or $brokeByGap) { $runStart = $i }
             $len = $i - $runStart + 1
             if ($len -gt $longest) {
                 $longest = $len
@@ -4180,7 +4229,8 @@ function global:Show-Report {
                 }
             }
             $completed = $completedList.ToArray()
-            $streak = Get-StreakInfo -Completed $completed
+            $dates = $dateList.ToArray()
+            $streak = Get-StreakInfo -Completed $completed -Dates $dates
 
             $startDateStr = "-"; $endDateStr = "-"
             if ($streak.Longest -gt 0 -and $streak.Start -ge 0) {
@@ -4511,7 +4561,16 @@ $SetTemplateBtn.Add_Click({
 
 $AddDayBtn.Add_Click({
     if ($global:ReadOnlyMode) { return }
-    $dateStr = (Get-ComputedDate).ToString("yyyy-MM-dd")
+    $global:Entries = Backfill-SkippedDays -Entries $global:Entries -Settings $global:Settings
+    $dateStr = (Get-Date).ToString("yyyy-MM-dd")
+    if (@($global:Entries | Where-Object { $_.Date -eq $dateStr })) {
+        # Backfill (or an earlier click) already created today - don't duplicate it.
+        $global:LiveEntries = $global:Entries
+        Save-Entries -Entries $global:Entries
+        Invoke-AutoSync
+        Set-Filter "All"
+        return
+    }
     $newEntry = New-Entry -Date $dateStr -GoalHours $global:Settings.GoalHours -ExistingEntries $global:Entries
     $global:Entries = @($global:Entries) + $newEntry
     $global:LiveEntries = $global:Entries
