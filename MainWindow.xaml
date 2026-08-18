@@ -4,6 +4,15 @@
         Background="#F6F1E4" FontFamily="Consolas">
 
     <Window.Resources>
+        <!-- Sidebar icon vector data (replaces Segoe MDL2 Assets font glyphs) -->
+        <StreamGeometry x:Key="CollapseMenuIcon">M3,5 L21,5 M3,12 L21,12 M3,19 L21,19</StreamGeometry>
+        <StreamGeometry x:Key="DashboardIcon">M3,3 L10,3 L10,10 L3,10 Z M13,3 L21,3 L21,10 L13,10 Z M3,13 L10,13 L10,21 L3,21 Z M13,13 L21,13 L21,21 L13,21 Z</StreamGeometry>
+        <StreamGeometry x:Key="FocusIcon">M8,5 L19,12 L8,19 Z</StreamGeometry>
+        <StreamGeometry x:Key="ExportIcon">M9,16 L9,4 L15,4 L15,16 M5,12 L12,19 L19,12 M4,21 L20,21</StreamGeometry>
+        <StreamGeometry x:Key="SwitchIcon">M7,16 L3,12 L7,8 M17,8 L21,12 L17,16 M3,12 L14,12 M10,12 L21,12</StreamGeometry>
+        <StreamGeometry x:Key="BackupIcon">M4,12 C4,7.58 7.58,4 12,4 C16.42,4 20,7.58 20,12 C20,16.42 16.42,20 12,20 M12,16 L12,8 M8,12 L12,16 L16,12</StreamGeometry>
+        <StreamGeometry x:Key="ArchiveIcon">M3,3 L21,3 L21,21 L3,21 Z M7,7 L17,7 L17,10 L7,10 Z M3,13 L21,13 M10,10 L10,17 L14,17 L14,10</StreamGeometry>
+
         <!-- Top button style -->
         <Style x:Key="TopBtnStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="Consolas"/>
@@ -167,13 +176,13 @@
                 <TextBlock x:Name="JourneyNameText" Text="" FontSize="13" Foreground="#5A6B8C"
                            Margin="0,2,0,12" Visibility="Collapsed"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,0,0,12">
-                    <Button x:Name="CreateJourneyBtn" Content="CREATE NEW JOURNEY" Width="150" Margin="0,0,8,0" Style="{StaticResource TopBtnStyle}"/>
-                    <Button x:Name="EditTemplateBtn" Content="EDIT TEMPLATE" Width="115" Margin="0,0,8,0" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
-                    <Button x:Name="AddDayBtn" Content="+ ADD DAY" Width="110" Margin="0,0,8,0" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
-                    <Button x:Name="BulkDeleteToggleBtn" Content="SELECT" Width="80" Margin="0,0,8,0" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
-                    <Button x:Name="SyncBtn" Content="SYNC" Width="70" Margin="0,0,8,0" Style="{StaticResource TopBtnStyle}"/>
+                    <Button x:Name="CreateJourneyBtn" Content="CREATE NEW JOURNEY" MinWidth="120" Margin="0,0,8,6" Style="{StaticResource TopBtnStyle}"/>
+                    <Button x:Name="EditTemplateBtn" Content="EDIT TEMPLATE" MinWidth="95" Margin="0,0,8,6" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
+                    <Button x:Name="AddDayBtn" Content="+ ADD DAY" MinWidth="90" Margin="0,0,8,6" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
+                    <Button x:Name="BulkDeleteToggleBtn" Content="SELECT" MinWidth="60" Margin="0,0,8,6" Visibility="Collapsed" Style="{StaticResource TopBtnStyle}"/>
+                    <Button x:Name="SyncBtn" Content="SYNC" MinWidth="55" Margin="0,0,8,6" Style="{StaticResource TopBtnStyle}"/>
                     <TextBlock x:Name="SyncStatusText" Text="Not synced yet" FontSize="11" Foreground="#5A6B8C"
-                               VerticalAlignment="Center" Margin="6,0,0,0"/>
+                               VerticalAlignment="Center" Margin="6,0,0,6"/>
                 </WrapPanel>
                 <StackPanel x:Name="BulkDeleteBanner" Orientation="Horizontal" Visibility="Collapsed" Margin="0,0,0,8">
                     <TextBlock x:Name="BulkDeleteCountText" Text="" FontFamily="Consolas" FontSize="11"
@@ -207,7 +216,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="CollapseIcon" Grid.Column="0" Text="&#xE700;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="CollapseIcon" Grid.Column="0" Data="{StaticResource CollapseMenuIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="CollapseLabel" Grid.Column="1" Text="COLLAPSE" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -220,7 +229,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="DashboardIcon" Grid.Column="0" Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="DashboardIcon" Grid.Column="0" Data="{StaticResource DashboardIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="DashboardLabel" Grid.Column="1" Text="DASHBOARD" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -239,7 +248,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="FocusIcon" Grid.Column="0" Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="FocusIcon" Grid.Column="0" Data="{StaticResource FocusIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="FocusLabel" Grid.Column="1" Text="FOCUS MODE" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -252,7 +261,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="ExportIcon" Grid.Column="0" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="ExportIcon" Grid.Column="0" Data="{StaticResource ExportIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="ExportLabel" Grid.Column="1" Text="EXPORT" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -268,7 +277,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="SwitchIcon" Grid.Column="0" Text="&#xE8AB;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="SwitchIcon" Grid.Column="0" Data="{StaticResource SwitchIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="SwitchLabel" Grid.Column="1" Text="SWITCH JOURNEY" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -284,7 +293,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="BackupIcon" Grid.Column="0" Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="BackupIcon" Grid.Column="0" Data="{StaticResource BackupIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="BackupLabel" Grid.Column="1" Text="BACKUP" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>
@@ -301,7 +310,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="ArchiveIcon" Grid.Column="0" Text="&#xE7B8;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2B3A55" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <Path x:Name="ArchiveIcon" Grid.Column="0" Data="{StaticResource ArchiveIcon}" Stroke="#2B3A55" StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="16" Height="16" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,10,0"/>
                             <TextBlock x:Name="ArchiveLabel" Grid.Column="1" Text="LOAD ARCHIVE" FontSize="12" FontWeight="Bold"
                                        Foreground="#2B3A55" VerticalAlignment="Center"/>
                         </Grid>

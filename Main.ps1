@@ -4569,6 +4569,7 @@ $AddDayBtn.Add_Click({
         Save-Entries -Entries $global:Entries
         Invoke-AutoSync
         Set-Filter "All"
+        [System.Windows.MessageBox]::Show("A day for today already exists. Use the Focus mode to track time for today.", "Add Day", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
         return
     }
     $newEntry = New-Entry -Date $dateStr -GoalHours $global:Settings.GoalHours -ExistingEntries $global:Entries

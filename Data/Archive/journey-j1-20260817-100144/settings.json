@@ -1,10 +1,10 @@
 ﻿{
-    "StartDate":  "2026-08-08",
+    "StartDate":  "2026-08-12",
     "GoalHours":  [
                       4,
                       6,
                       9
                   ],
-    "JourneyName":  "J1",
-    "BackupFolder":  "D:\\Productivity Backup"
+    "JourneyName":  "j1",
+    "BackupFolder":  "D:\\Back-Test"
 }
