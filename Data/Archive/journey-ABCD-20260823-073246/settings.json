@@ -1,8 +1,8 @@
 ﻿{
     "StartDate":  "2026-08-23",
     "GoalHours":  [
-                      6
+                      1
                   ],
-    "JourneyName":  "23 August",
+    "JourneyName":  "ABCD",
     "BackupFolder":  "D:\\Back-Test"
 }

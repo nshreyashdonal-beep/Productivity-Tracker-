@@ -641,6 +641,39 @@ function global:Rename-ArchivedJourney {
     return $newPath
 }
 
+function global:Reconcile-RenamedJourneyArchives {
+    <#
+        When a journey is renamed WHILE LIVE (Edit Template), Data\Archive can
+        already hold folder(s) for that same journey from before the rename -
+        left over from an earlier Switch Journey / Create New Journey that
+        archived it under its old name. Those old-named folders never get
+        touched by the rename itself (Edit Template only updates the live
+        settings.json), so they sit there forever as a "ghost" duplicate journey
+        with the old name, alongside whatever now gets archived under the new
+        name.
+
+        This finds any archived folder(s) matching $OldName and renames them
+        (via Rename-ArchivedJourney) to $NewName, so only the current name is
+        ever visible in SWITCH JOURNEY / LOAD ARCHIVE - no separate history is
+        kept under the old name. If a journey already exists under $NewName,
+        that particular old-named folder is left alone rather than overwritten,
+        so unrelated data is never destroyed.
+    #>
+    param([string]$OldName, [string]$NewName)
+
+    if ([string]::IsNullOrWhiteSpace($OldName) -or $OldName -eq $NewName) { return }
+
+    $matches = @(Get-ArchivedJourneys | Where-Object { $_.Name -eq $OldName })
+    foreach ($m in $matches) {
+        try {
+            Rename-ArchivedJourney -ArchivePath $m.Path -NewName $NewName | Out-Null
+        } catch {
+            # A journey already exists under $NewName - leave this old-named
+            # archive folder alone rather than risk clobbering unrelated data.
+        }
+    }
+}
+
 function global:Delete-ArchivedJourney {
     <#
         Completely removes an archived journey folder and all its contents.

@@ -4502,10 +4502,45 @@ $SetTemplateBtn.Add_Click({
     }
 
     if ($global:JourneyPanelMode -eq "Edit") {
+        # Capture the live backup folder BEFORE the name changes, so a rename can be
+        # reconciled below - without this, Get-LiveJourneyDir (called from
+        # Invoke-AutoSync) derives its path from the NEW name and just starts a fresh
+        # folder there, leaving the old-named folder (and its live.json/live.xlsx and
+        # any rotated snapshots) behind untouched. That looked like renaming had
+        # "copied" the journey instead of renaming it.
+        $oldJourneyDir = Get-LiveJourneyDir
+        $oldJourneyName = $global:Settings.JourneyName
+
         $global:Settings.GoalHours = $global:PendingGoalHours
         $global:Settings.JourneyName = $journeyName
         $global:LiveSettings = $global:Settings
         Save-Settings -Settings $global:Settings
+
+        # Also fold in any Data\Archive folder(s) still sitting under the OLD
+        # name (leftover from a previous Switch Journey / Create New Journey
+        # that archived this same journey before it was renamed) - otherwise
+        # they linger forever as a separate "ghost" entry in SWITCH JOURNEY /
+        # LOAD ARCHIVE alongside the new name.
+        Reconcile-RenamedJourneyArchives -OldName $oldJourneyName -NewName $journeyName
+
+        $newJourneyDir = Get-LiveJourneyDir
+        if ($oldJourneyDir -ne $newJourneyDir -and (Test-Path $oldJourneyDir)) {
+            if (-not (Test-Path $newJourneyDir)) {
+                # No folder exists under the new name yet - just rename it in place.
+                $parentDir = Split-Path $newJourneyDir -Parent
+                if (-not (Test-Path $parentDir)) { New-Item -ItemType Directory -Path $parentDir -Force | Out-Null }
+                Rename-Item -Path $oldJourneyDir -NewName (Split-Path $newJourneyDir -Leaf)
+            } else {
+                # A folder for the new name already exists (e.g. renaming back to a
+                # name used before) - fold the old folder's files into it, then remove
+                # the old folder, so nothing is silently duplicated.
+                Get-ChildItem -Path $oldJourneyDir -File -ErrorAction SilentlyContinue | ForEach-Object {
+                    Copy-Item -Path $_.FullName -Destination $newJourneyDir -Force
+                }
+                Remove-Item -Path $oldJourneyDir -Recurse -Force
+            }
+        }
+
         $StartJourneyPanel.Visibility = "Collapsed"
         $CreateJourneyBtn.Visibility = "Visible"
         Set-JourneyEditButtons -Disabled $false
