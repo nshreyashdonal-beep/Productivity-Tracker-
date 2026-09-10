@@ -1,0 +1,10 @@
+﻿{
+    "StartDate":  "2026-09-02",
+    "GoalHours":  [
+                      4,
+                      6,
+                      9
+                  ],
+    "JourneyName":  "Lets do this one more time",
+    "BackupFolder":  null
+}

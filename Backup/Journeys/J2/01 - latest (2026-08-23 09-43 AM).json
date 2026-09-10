@@ -1,0 +1,15 @@
+﻿{
+    "Id":  "28045c31-e631-45c9-80da-08812510c127",
+    "Date":  "2026-08-23",
+    "DayNumber":  1,
+    "Goals":  [
+                  {
+                      "Hours":  5,
+                      "Status":  "missed"
+                  }
+              ],
+    "Note":  "",
+    "Sessions":  [
+
+                 ]
+}

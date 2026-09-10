@@ -1,0 +1,264 @@
+﻿[
+    {
+        "Id":  "4a411bac-4d09-4962-a45f-1799fcda26e3",
+        "Date":  "2026-08-24",
+        "DayNumber":  1,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "sfkjnsfkjfsnkc cxcm, nd ",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "React lecture",
+                             "start":  "15:58",
+                             "end":  "15:59",
+                             "duration":  1
+                         }
+                     ]
+    },
+    {
+        "Id":  "68cdf46f-f6ed-4a9b-9592-cad9d7469833",
+        "Date":  "2026-08-25",
+        "DayNumber":  2,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "react 6 :",
+                             "start":  "14:23",
+                             "end":  "15:40",
+                             "duration":  77
+                         }
+                     ]
+    },
+    {
+        "Id":  "1dbd5ea7-3651-4170-83a2-1bf3dfbf4eb2",
+        "Date":  "2026-08-26",
+        "DayNumber":  3,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "06e5de19-1d96-4e1d-972f-5c2b45915f64",
+        "Date":  "2026-08-27",
+        "DayNumber":  4,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "43ae10a3-b308-4a5d-ae32-34b61f3df390",
+        "Date":  "2026-08-28",
+        "DayNumber":  5,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "b434801c-9b4f-450e-a048-cf58eec62a37",
+        "Date":  "2026-08-29",
+        "DayNumber":  6,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "cc482b89-e88c-45ce-b3b1-3b065a8b4ad5",
+        "Date":  "2026-08-30",
+        "DayNumber":  7,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "73f46b59-393e-4a98-826b-5af085314fdf",
+        "Date":  "2026-08-31",
+        "DayNumber":  8,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "ee93d396-13ae-42f0-bfaa-2ca7d8afcb01",
+        "Date":  "2026-09-01",
+        "DayNumber":  9,
+        "Goals":  [
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "Wasted entire day \r\nmin only 2 hour productivity ",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "7707841f-af82-49b9-a5bd-8dd306b648b6",
+        "Date":  "2026-09-02",
+        "DayNumber":  10,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "3fc8f969-b1ab-4aa2-a28e-ac7450e411be",
+        "Date":  "2026-09-03",
+        "DayNumber":  11,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "2d036d08-0af3-4a56-a739-d634228b208b",
+        "Date":  "2026-09-04",
+        "DayNumber":  12,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "c232526c-26a0-4b12-87d0-1ef20bb8272e",
+        "Date":  "2026-09-05",
+        "DayNumber":  13,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "5e5c73d2-afb0-402e-ab69-28fe301ee632",
+        "Date":  "2026-09-06",
+        "DayNumber":  14,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    }
+]

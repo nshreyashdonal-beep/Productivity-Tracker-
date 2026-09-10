@@ -1,0 +1,269 @@
+﻿[
+    {
+        "Id":  "73b47417-fef7-48ca-a6b8-a139bdf0ab04",
+        "Date":  "2026-09-02",
+        "DayNumber":  1,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "done"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "",
+                             "start":  "07:08",
+                             "end":  "07:23",
+                             "duration":  15
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "React Part 6  : it took me 90 minutes to complete a 14 min video",
+                             "start":  "07:44",
+                             "end":  "09:14",
+                             "duration":  90
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "React Part 6",
+                             "start":  "09:26",
+                             "end":  "09:42",
+                             "duration":  16
+                         }
+                     ]
+    },
+    {
+        "Id":  "22ed3b11-2087-424c-bbc1-f3c14bc0b06f",
+        "Date":  "2026-09-03",
+        "DayNumber":  2,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "done"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "9125481a-73e1-4f1c-9227-20c62bd99984",
+        "Date":  "2026-09-04",
+        "DayNumber":  3,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java",
+                             "start":  "15:07",
+                             "end":  "15:47",
+                             "duration":  40
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java",
+                             "start":  "16:05",
+                             "end":  "17:05",
+                             "duration":  60
+                         }
+                     ]
+    },
+    {
+        "Id":  "219fac97-326c-4c0f-941b-7c32a81a6806",
+        "Date":  "2026-09-05",
+        "DayNumber":  4,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise session",
+                             "start":  "14:42",
+                             "end":  "16:12",
+                             "duration":  90
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise session",
+                             "start":  "16:12",
+                             "end":  "16:52",
+                             "duration":  40
+                         }
+                     ]
+    },
+    {
+        "Id":  "d2712c3b-b1b8-4dbd-ba0d-d2514f4debb1",
+        "Date":  "2026-09-06",
+        "DayNumber":  5,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "after 9 everything everything started to falll \r\nand I broke not entertainment during productive hours \r\nalso i wasted 12-4 time in making wall-e ",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "ffd",
+                             "start":  "18:52",
+                             "end":  "20:22",
+                             "duration":  90
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise",
+                             "start":  "20:22",
+                             "end":  "21:09",
+                             "duration":  47
+                         }
+                     ]
+    },
+    {
+        "Id":  "a05cb9d6-b1bd-453f-a25c-22ec29eb9864",
+        "Date":  "2026-09-07",
+        "DayNumber":  6,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "fir 8:36 se lke 8:56 takk deck generation krta rha actual padhae kuch nhi \r\n8:56 se 10 takk fir wahie deck generation krta rha \r\n8-10 table pe betha target was to do coding coding ka c bhi nhi kiya usko chrrd ke sabh kiya ",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "is 40 minute mai bsh purane deck ka revision hua aur kuch nhi",
+                             "start":  "07:56",
+                             "end":  "08:36",
+                             "duration":  40
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Learned 2 cards of 18 Aug",
+                             "start":  "10:11",
+                             "end":  "11:00",
+                             "duration":  49
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java 18 Aug",
+                             "start":  "15:00",
+                             "end":  "15:40",
+                             "duration":  40
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "20 Aug",
+                             "start":  "15:53",
+                             "end":  "16:29",
+                             "duration":  36
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java 20 Aug",
+                             "start":  "17:10",
+                             "end":  "17:35",
+                             "duration":  25
+                         }
+                     ]
+    },
+    {
+        "Id":  "e167aa50-13d0-45d7-93a0-3b39a20b2e78",
+        "Date":  "2026-09-08",
+        "DayNumber":  7,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise Session",
+                             "start":  "16:45",
+                             "end":  "18:45",
+                             "duration":  120
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "",
+                             "start":  "18:33",
+                             "end":  "18:58",
+                             "duration":  25
+                         }
+                     ]
+    }
+]

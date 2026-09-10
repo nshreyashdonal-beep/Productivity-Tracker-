@@ -1,0 +1,140 @@
+﻿[
+    {
+        "Id":  "73b47417-fef7-48ca-a6b8-a139bdf0ab04",
+        "Date":  "2026-09-02",
+        "DayNumber":  1,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "done"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "",
+                             "start":  "07:08",
+                             "end":  "07:23",
+                             "duration":  15
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "React Part 6  : it took me 90 minutes to complete a 14 min video",
+                             "start":  "07:44",
+                             "end":  "09:14",
+                             "duration":  90
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "React Part 6",
+                             "start":  "09:26",
+                             "end":  "09:42",
+                             "duration":  16
+                         }
+                     ]
+    },
+    {
+        "Id":  "22ed3b11-2087-424c-bbc1-f3c14bc0b06f",
+        "Date":  "2026-09-03",
+        "DayNumber":  2,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "done"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+
+                     ]
+    },
+    {
+        "Id":  "9125481a-73e1-4f1c-9227-20c62bd99984",
+        "Date":  "2026-09-04",
+        "DayNumber":  3,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java",
+                             "start":  "15:07",
+                             "end":  "15:47",
+                             "duration":  40
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java",
+                             "start":  "16:05",
+                             "end":  "17:05",
+                             "duration":  60
+                         }
+                     ]
+    },
+    {
+        "Id":  "219fac97-326c-4c0f-941b-7c32a81a6806",
+        "Date":  "2026-09-05",
+        "DayNumber":  4,
+        "Goals":  [
+                      {
+                          "Hours":  4,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  6,
+                          "Status":  "missed"
+                      },
+                      {
+                          "Hours":  9,
+                          "Status":  "missed"
+                      }
+                  ],
+        "Note":  "",
+        "Sessions":  [
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise session",
+                             "start":  "14:42",
+                             "end":  "16:12",
+                             "duration":  90
+                         },
+                         {
+                             "type":  "Pomodoro",
+                             "label":  "Java Practise session",
+                             "start":  "16:12",
+                             "end":  "16:52",
+                             "duration":  40
+                         }
+                     ]
+    }
+]

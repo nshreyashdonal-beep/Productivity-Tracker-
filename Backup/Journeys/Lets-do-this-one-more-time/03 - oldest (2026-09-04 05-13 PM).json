@@ -1,0 +1,43 @@
+﻿{
+    "Id":  "73b47417-fef7-48ca-a6b8-a139bdf0ab04",
+    "Date":  "2026-09-02",
+    "DayNumber":  1,
+    "Goals":  [
+                  {
+                      "Hours":  4,
+                      "Status":  "missed"
+                  },
+                  {
+                      "Hours":  6,
+                      "Status":  "missed"
+                  },
+                  {
+                      "Hours":  9,
+                      "Status":  "missed"
+                  }
+              ],
+    "Note":  "",
+    "Sessions":  [
+                     {
+                         "type":  "Pomodoro",
+                         "label":  "",
+                         "start":  "07:08",
+                         "end":  "07:23",
+                         "duration":  15
+                     },
+                     {
+                         "type":  "Pomodoro",
+                         "label":  "React Part 6  : it took me 90 minutes to complete a 14 min video",
+                         "start":  "07:44",
+                         "end":  "09:14",
+                         "duration":  90
+                     },
+                     {
+                         "type":  "Pomodoro",
+                         "label":  "React Part 6",
+                         "start":  "09:26",
+                         "end":  "09:42",
+                         "duration":  16
+                     }
+                 ]
+}
