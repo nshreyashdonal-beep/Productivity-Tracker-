@@ -1,0 +1,70 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Focus Session Recovery" Width="460" SizeToContent="Height"
+        Background="#F6F1E4" FontFamily="Consolas" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" ShowInTaskbar="True">
+
+
+    <Window.Resources>
+        <!-- Matches the app's button look: white fill, navy border, corner radius. -->
+        <Style x:Key="DlgBtnStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="10,6,10,6"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#2B3A55"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#2B3A55"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#5A6B8C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- ================= RESUME PANEL (Scenarios 1/2) ================= -->
+        <StackPanel x:Name="ResumePanel" Margin="30,26,30,26">
+            <TextBlock Text="Focus session detected" FontSize="19" FontWeight="Bold" Foreground="#2B3A55"/>
+            <TextBlock Text="Task:" FontSize="12" Foreground="#5A6B8C" Margin="0,18,0,2"/>
+            <TextBlock x:Name="LabelText" FontSize="14" FontWeight="Bold" Foreground="#2B3A55"
+                       TextWrapping="Wrap" Margin="0,0,0,4"/>
+            <TextBlock x:Name="ElapsedText" FontSize="13" Foreground="#2B3A55" Margin="0,8,0,2"/>
+            <TextBlock x:Name="RemainingText" FontSize="13" Foreground="#2B3A55" Margin="0,0,0,22"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="ResumeBtn" Content="Resume" MinWidth="110" Margin="0,0,12,0" Style="{StaticResource DlgBtnStyle}"/>
+                <Button x:Name="EndSessionBtn" Content="End Session" MinWidth="130" Style="{StaticResource DlgBtnStyle}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- ================= COMPLETION PANEL (Scenario 3) ================= -->
+        <StackPanel x:Name="CompletionPanel" Margin="30,26,30,26" Visibility="Collapsed">
+            <TextBlock Text="Welcome back!" FontSize="19" FontWeight="Bold" Foreground="#2B3A55"/>
+            <TextBlock Text="Your focus session" FontSize="12" Foreground="#5A6B8C" Margin="0,18,0,2"/>
+            <TextBlock x:Name="CompletionLabelText" FontSize="14" FontWeight="Bold" Foreground="#2B3A55"
+                       TextWrapping="Wrap" Margin="0,0,0,2"/>
+            <TextBlock Text="completed while the application was closed." FontSize="12" Foreground="#5A6B8C" Margin="0,0,0,16"/>
+            <TextBlock Text="Duration" FontSize="12" Foreground="#5A6B8C" Margin="0,2,0,2"/>
+            <TextBlock x:Name="CompletionDurationText" FontSize="14" FontWeight="Bold" Foreground="#2B3A55" Margin="0,0,0,22"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="CompleteBtn" Content="Complete" MinWidth="110" Margin="0,0,12,0"
+                        Background="#2B3A55" Foreground="#F6F1E4" Style="{StaticResource DlgBtnStyle}"/>
+                <Button x:Name="DiscardBtn" Content="Discard" MinWidth="100" Style="{StaticResource DlgBtnStyle}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -2576,6 +2576,52 @@ function global:Get-FocusTargetEntry {
     return $null
 }
 
+function global:Get-OrCreateEntryForDate {
+    <#
+        Returns the entry for the given yyyy-MM-dd date, creating it only if
+        necessary - and always through the app's existing Auto Day Creation
+        path, never a second/incompatible mechanism. Used when a manually
+        logged overnight focus session spills into the following calendar
+        day and that day's row doesn't exist yet.
+
+        Two-step lookup, matching the pattern Start-FocusSession and
+        Write-FocusSessionRecord already use for "today":
+          1. Backfill-SkippedDays - fills any backward gap between the last
+             known day and today (a no-op if there's no gap, which is the
+             common case since the app keeps this current on every launch).
+          2. If the date is still missing (it's today or in the future
+             relative to "today" - e.g. logging an overnight session on the
+             day it's still in progress - Backfill never creates those), the
+             day is created directly with New-Entry, the same shape every
+             other day in the app has.
+        Never creates a duplicate: the existing entry is returned as-is
+        whenever one is already found, at either step.
+    #>
+    param([Parameter(Mandatory)][string]$DateStr)
+
+    $existing = $global:Entries | Where-Object { $_.Date -eq $DateStr }
+    if ($existing) { return $existing }
+
+    $global:Entries = Backfill-SkippedDays -Entries $global:Entries -Settings $global:Settings
+    $existing = $global:Entries | Where-Object { $_.Date -eq $DateStr }
+
+    if (-not $existing) {
+        $goals = @($global:Settings.GoalHours | Where-Object { $null -ne $_ })
+        $newEntry = New-Entry -Date $DateStr -GoalHours $goals -ExistingEntries $global:Entries
+        $global:Entries = Renumber-Entries -Entries (@($global:Entries) + $newEntry)
+        $existing = $newEntry
+    }
+
+    $global:LiveEntries = $global:Entries
+    Save-Entries -Entries $global:Entries
+    Invoke-AutoSync
+    # A brand new (or freshly backfilled) day needs to appear in the Days
+    # list right away, same as Start-FocusSession does when it auto-creates
+    # today's entry.
+    Render-Days
+    return $existing
+}
+
 function global:Show-FocusMode {
     # Sidebar leaf -> swap the content area to the Focus Mode view. The clock is
     # NOT restarted here: leaving the Focus view pauses the session, so the user
@@ -3444,7 +3490,11 @@ function global:Show-FocusRecordDialog {
             Update-FocusViewsInPlace -EntryId $Entry.Id
             $dlg.Close()
         } else {
-            # Add: parse times and create session
+            # Add: parse the typed times. "h:mm tt" has no date component, so
+            # TryParseExact would otherwise silently default the date to
+            # today - always anchor to the row's own date instead, the same
+            # way the read-only edit-mode block above (~line 3232) already
+            # reconstructs session.start/session.end against $Entry.Date.
             [datetime]$startT = [datetime]::MinValue
             [datetime]$endT   = [datetime]::MinValue
             $startCombined = "$($startBox.Text.Trim()) $($startAmpm.SelectedItem)"
@@ -3455,40 +3505,99 @@ function global:Show-FocusRecordDialog {
                 $errorText.Text = "Enter start and end as h:mm AM/PM (e.g. 9:30 AM)."
                 $errorText.Visibility = "Visible"; return
             }
-            # Overnight / cross-midnight detection: when end-of-day time is
-            # numerically smaller than start (e.g. 11:30 PM → 12:30 AM), roll
-            # the start back one calendar day so the session spans midnight.
-            # Sessions are stored on the end day, so start moves, not end.
-            if ($endT.Hour -lt $startT.Hour) {
-                $startT = $startT.AddDays(-1)
-            } elseif ($endT -le $startT) {
-                $errorText.Text = "End must be after Start."
+
+            $rowDate = [datetime]::ParseExact($Entry.Date, "yyyy-MM-dd", $null).Date
+            $startDT = $rowDate.AddHours($startT.Hour).AddMinutes($startT.Minute)
+            $endDT   = $rowDate.AddHours($endT.Hour).AddMinutes($endT.Minute)
+
+            # Exact equality is almost certainly a typo, not a 24-hour
+            # session - reject it outright rather than letting it fall
+            # through to the overnight rule below and get capped to 180.
+            if ($endDT -eq $startDT) {
+                $errorText.Text = "End time must be different from Start time."
                 $errorText.Visibility = "Visible"; return
             }
-            if (($endT - $startT).TotalMinutes -lt 1) {
-                $errorText.Text = "Session must be at least 1 minute."
-                $errorText.Visibility = "Visible"; return
+
+            # Overnight / cross-midnight detection: compare the full
+            # reconstructed instants, never just .Hour (which ignores
+            # minutes and can misread a same-day typo like 2:15 PM -> 1:45 PM
+            # as a session spanning almost a full day). Only roll to the next
+            # calendar day when End is genuinely earlier than Start.
+            if ($endDT -lt $startDT) {
+                $endDT = $endDT.AddDays(1)
             }
+
+            # Hard cap: no single focus session logs more than 180 minutes.
+            # Longer spans are truncated to exactly 180 minutes from Start,
+            # never rejected - this is also what keeps an ambiguous same-day
+            # typo (above) from ever being stored as a near-24-hour session.
+            $actualMinutes = ($endDT - $startDT).TotalMinutes
+            $cappedMinutes = [Math]::Min([math]::Round($actualMinutes), 180)
+            $cappedEndDT   = $startDT.AddMinutes($cappedMinutes)
+
+            # Future-time validation runs against the actual reconstructed
+            # (and capped) dates, so a historical row's late-evening time is
+            # never confused with today, and an overnight end that lands on
+            # today is checked against the real current moment rather than a
+            # value silently shifted onto today's date.
             $now = Get-Date
-            if ($startT -gt $now) {
+            if ($startDT -gt $now) {
                 $errorText.Text = "Start time cannot be in the future."
                 $errorText.Visibility = "Visible"; return
             }
-            if ($endT -gt $now) {
+            if ($cappedEndDT -gt $now) {
                 $errorText.Text = "End time cannot be in the future."
                 $errorText.Visibility = "Visible"; return
             }
-            $typeStr = if ($typeBox.SelectedItem -eq "Pomo") { "Pomodoro" } else { "Stopwatch" }
-            $newSession = [PSCustomObject]@{
-                type = $typeStr; label = $titleBox.Text.Trim()
-                start = Format-FocusHM $startT; end = Format-FocusHM $endT
-                duration = [int][Math]::Max(1, [math]::Round((($endT - $startT).TotalMinutes)))
+
+            $typeStr  = if ($typeBox.SelectedItem -eq "Pomo") { "Pomodoro" } else { "Stopwatch" }
+            $labelStr = $titleBox.Text.Trim()
+            $midnight = $rowDate.AddDays(1)
+            $isOvernight = $cappedEndDT -gt $midnight
+            $nextEntry = $null
+
+            if (-not $isOvernight) {
+                # Ordinary same-day session (the common case, including a
+                # session capped down to same-day per the note above).
+                $newSession = [PSCustomObject]@{
+                    type = $typeStr; label = $labelStr
+                    start = Format-FocusHM $startDT; end = Format-FocusHM $cappedEndDT
+                    duration = [int][Math]::Max(1, $cappedMinutes)
+                }
+                $global:Entries = Add-EntrySession -Entries $global:Entries -Id $Entry.Id -Session $newSession
+            } else {
+                # Genuine overnight: split the (already-capped) duration at
+                # midnight and log each portion on its own calendar day,
+                # matching the app's one-row-per-day data model. The next
+                # day's entry is found or created through the app's existing
+                # Auto Day Creation path (Get-OrCreateEntryForDate) - it is
+                # updated in place if it already exists, never duplicated.
+                $day1Minutes = [int][Math]::Max(1, [math]::Round(($midnight - $startDT).TotalMinutes))
+                $day2Minutes = [int][Math]::Max(1, $cappedMinutes - $day1Minutes)
+
+                $session1 = [PSCustomObject]@{
+                    type = $typeStr; label = $labelStr
+                    start = Format-FocusHM $startDT; end = "00:00"
+                    duration = $day1Minutes
+                }
+                $session2 = [PSCustomObject]@{
+                    type = $typeStr; label = $labelStr
+                    start = "00:00"; end = Format-FocusHM ($midnight.AddMinutes($day2Minutes))
+                    duration = $day2Minutes
+                }
+
+                $nextEntry = Get-OrCreateEntryForDate -DateStr ($midnight.ToString("yyyy-MM-dd"))
+                $global:Entries = Add-EntrySession -Entries $global:Entries -Id $Entry.Id -Session $session1
+                $global:Entries = Add-EntrySession -Entries $global:Entries -Id $nextEntry.Id -Session $session2
             }
-            $global:Entries = Add-EntrySession -Entries $global:Entries -Id $Entry.Id -Session $newSession
+
             $global:LiveEntries = $global:Entries
             Save-Entries -Entries $global:Entries
             Invoke-AutoSync
             Update-FocusViewsInPlace -EntryId $Entry.Id
+            if ($isOvernight) {
+                Update-FocusViewsInPlace -EntryId $nextEntry.Id
+            }
             $dlg.Close()
         }
     }.GetNewClosure())
